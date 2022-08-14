@@ -1,0 +1,34 @@
+package ru.netology.qa.selenide;
+
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+
+import java.time.Duration;
+
+import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.*;
+import static java.time.Duration.*;
+
+class CardDeliveryTest {
+    @Test
+    void shouldTest() {
+        open("http://localhost:9999/");
+        $("[placeholder='Город']").setValue("Казань");
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(Keys.DELETE);
+        $("[placeholder='Дата встречи']").setValue("20.08.2022");
+        $("[name='name']").setValue("Антонов Антон");
+        $("[name='phone']").setValue("+79991112223");
+        $("[data-test-id='agreement']").click();
+        $(By.className("button")).click();
+        $(By.className("notification_visible")).shouldBe(visible, Duration.ofSeconds(15));
+        $(By.className("notification__title")).shouldHave(exactText("Успешно!"));
+        $(By.className("notification__content")).shouldHave(exactText("Встреча успешно забронирована на 20.08.2022"));
+
+    }
+}
+
